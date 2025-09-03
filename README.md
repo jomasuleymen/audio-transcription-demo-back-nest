@@ -15,7 +15,7 @@ GraphQL API server for audio transcription with S3 file storage.
    cp .env.example .env
    ```
 
-3. **Start MinIO (local S3):**
+3. **Start services (MongoDB, Redis, MinIO, Mongo Express):**
    ```bash
    docker-compose up -d
    ```
@@ -33,7 +33,7 @@ GraphQL API server for audio transcription with S3 file storage.
 
 ## Environment Variables
 
-Required environment variables for S3 configuration:
+Required environment variables:
 
 | Variable | Description | Example |
 |----------|-------------|---------|
@@ -44,6 +44,23 @@ Required environment variables for S3 configuration:
 | `S3_ACCESS_KEY_ID` | S3 access key | `minioadmin` |
 | `S3_SECRET_ACCESS_KEY` | S3 secret key | `minioadmin` |
 | `S3_REGION` | S3 region | `us-east-1` |
+| `MONGO_USERNAME` | MongoDB admin username | `admin` |
+| `MONGO_PASSWORD` | MongoDB admin password | `password123` |
+| `MONGO_PORT` | MongoDB port | `27017` |
+| `REDIS_PORT` | Redis port | `6379` |
+| `REDIS_PASSWORD` | Redis password | `redis123` |
+
+## Services
+
+When running `docker-compose up -d`, the following services will be available:
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| **MinIO Console** | http://localhost:9001 | S3-compatible storage admin interface |
+| **MinIO API** | http://localhost:9000 | S3-compatible storage API |
+| **Mongo Express** | http://localhost:8090 | MongoDB admin interface |
+| **MongoDB** | localhost:27017 | MongoDB database |
+| **Redis** | localhost:6379 | Redis cache |
 
 ## Development
 
