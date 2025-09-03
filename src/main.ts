@@ -1,6 +1,7 @@
+import { setupApp } from '@core/bootstrap-configs/app.config';
 import { EnvConfigService } from '@core/env-config/env-config.service';
-import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -8,13 +9,13 @@ async function bootstrap() {
     bufferLogs: true,
   });
 
-  const logger = app.get<Logger>(Logger);
+  await setupApp(app as NestExpressApplication);
 
   const envConfigService = app.get(EnvConfigService);
   const port = envConfigService.getPort();
 
   await app.listen(port, () => {
-    logger.log(`Server is running on port ${port}`);
+    console.log(`Server is running on port ${port}`);
   });
 }
 

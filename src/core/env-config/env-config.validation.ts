@@ -1,5 +1,5 @@
-import { plainToInstance, Type } from 'class-transformer';
-import { IsEnum, IsNumber, IsOptional, validateSync } from 'class-validator';
+import { plainToInstance, Transform, Type } from 'class-transformer';
+import { IsArray, IsEnum, IsNumber, IsOptional, IsString, validateSync } from 'class-validator';
 import { NODE_ENV } from './env-config.const';
 
 export class EnvironmentVariables {
@@ -8,8 +8,13 @@ export class EnvironmentVariables {
 
   @Type(() => Number)
   @IsNumber()
+  PORT: number;
+
+  @Transform(({ value }) =>  value?.split(',').map((v) => v.trim()))
   @IsOptional()
-  PORT?: number = 3000;
+  @IsArray()
+  @IsString({ each: true })
+  CORS_ORIGIN?: string[];
 }
 
 export function validate(config: Record<string, unknown>) {
@@ -21,5 +26,6 @@ export function validate(config: Record<string, unknown>) {
   if (errors.length > 0) {
     throw new Error(errors.toString());
   }
+
   return validatedConfig;
 }

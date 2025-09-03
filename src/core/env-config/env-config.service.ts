@@ -14,4 +14,8 @@ export class EnvConfigService {
   getPort(): number {
     return this.configService.get('PORT', 3000);
   }
+
+  getCorsOrigin(): string[] | undefined {
+    return this.configService.get('CORS_ORIGIN');
+  }
 }
