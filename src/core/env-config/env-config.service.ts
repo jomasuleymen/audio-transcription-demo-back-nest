@@ -18,4 +18,16 @@ export class EnvConfigService {
   getCorsOrigin(): string[] | undefined {
     return this.configService.get('CORS_ORIGIN');
   }
+
+  getS3Endpoint(): string {
+    return this.configService.get('S3_ENDPOINT')!;
+  }
+
+  getS3AccessKeyId(): string {
+    return this.configService.get('S3_ACCESS_KEY_ID')!;
+  }
+
+  getS3SecretAccessKey(): string {
+    return this.configService.get('S3_SECRET_ACCESS_KEY')!;
+  }
 }

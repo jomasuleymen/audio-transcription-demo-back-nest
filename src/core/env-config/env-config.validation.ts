@@ -1,5 +1,13 @@
 import { plainToInstance, Transform, Type } from 'class-transformer';
-import { IsArray, IsEnum, IsNumber, IsOptional, IsString, validateSync } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  validateSync,
+} from 'class-validator';
 import { NODE_ENV } from './env-config.const';
 
 export class EnvironmentVariables {
@@ -10,11 +18,23 @@ export class EnvironmentVariables {
   @IsNumber()
   PORT: number;
 
-  @Transform(({ value }) =>  value?.split(',').map((v) => v.trim()))
+  @Transform(({ value }) => value?.split(',').map((v) => v.trim()))
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   CORS_ORIGIN?: string[];
+
+  @IsString()
+  @IsNotEmpty()
+  S3_ENDPOINT: string;
+
+  @IsString()
+  @IsNotEmpty()
+  S3_ACCESS_KEY_ID: string;
+
+  @IsString()
+  @IsNotEmpty()
+  S3_SECRET_ACCESS_KEY: string;
 }
 
 export function validate(config: Record<string, unknown>) {
