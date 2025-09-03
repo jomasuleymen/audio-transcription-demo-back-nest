@@ -8,11 +8,21 @@ services:
       - '9000:9000'
       - '9001:9001'
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
 
+  redis:
+    image: redis:7.2.9-alpine
+    container_name: audio_transcription_redis
+    ports:
+      - ${REDIS_PORT}:6379
+    command: redis-server --save 100 10 --requirepass ${REDIS_PASSWORD} --loglevel warning
+    volumes:
+      - redis_data:/data
+
 volumes:
   minio_data:
+  redis_data:
