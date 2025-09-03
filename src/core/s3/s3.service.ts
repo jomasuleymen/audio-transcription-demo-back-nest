@@ -1,10 +1,9 @@
 import {
   CreateBucketCommand,
   HeadBucketCommand,
-  PutObjectCommand,
+  PutBucketPolicyCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { EnvConfigService } from '../env-config/env-config.service';
 import { S3_BUCKET_NAMES } from './s3.constants';
@@ -38,25 +37,6 @@ export class S3Service implements OnModuleInit {
     });
   }
 
-  async generatePresignedUrl(
-    bucketName: S3BucketName,
-    key: string,
-    contentType: string,
-    ttl: number = 900,
-  ): Promise<string> {
-    const command = new PutObjectCommand({
-      Bucket: bucketName,
-      Key: key,
-      ContentType: contentType,
-    });
-
-    const uploadUrl = await getSignedUrl(this.s3Client, command, {
-      expiresIn: ttl,
-    });
-
-    return uploadUrl;
-  }
-
   getObjectUrl(bucketName: S3BucketName, key: string): string {
     return `${this.envConfig.getS3Endpoint()}/${bucketName}/${key}`;
   }
@@ -68,11 +48,39 @@ export class S3Service implements OnModuleInit {
     } catch {
       try {
         await this.s3Client.send(new CreateBucketCommand({ Bucket: bucketName }));
-        this.logger.log(`Created bucket ${bucketName}`);
       } catch (createError) {
         this.logger.error(`Failed to create bucket ${bucketName}`, createError);
         throw createError;
       }
+    } finally {
+      await this.setPublicReadPolicy(bucketName);
+    }
+  }
+
+  private async setPublicReadPolicy(bucketName: S3BucketName): Promise<void> {
+    const publicReadPolicy = {
+      Version: '2012-10-17',
+      Statement: [
+        {
+          Sid: 'PublicReadGetObject',
+          Effect: 'Allow',
+          Principal: '*',
+          Action: 's3:GetObject',
+          Resource: `arn:aws:s3:::${bucketName}/*`,
+        },
+      ],
+    };
+
+    try {
+      await this.s3Client.send(
+        new PutBucketPolicyCommand({
+          Bucket: bucketName,
+          Policy: JSON.stringify(publicReadPolicy),
+        }),
+      );
+      this.logger.log(`Set public read policy for bucket ${bucketName}`);
+    } catch (error) {
+      this.logger.warn(`Failed to set public policy for bucket ${bucketName}`, error);
     }
   }
 

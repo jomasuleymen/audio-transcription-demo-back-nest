@@ -1,3 +1,5 @@
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { S3_BUCKET_NAMES } from '@core/s3/s3.constants';
 import { S3Service } from '@core/s3/s3.service';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
@@ -14,18 +16,17 @@ export class TranscriptionJobsService {
   constructor(private readonly s3Service: S3Service) {}
 
   async create(createInput: CreateTranscriptionJobInput): Promise<CreateTranscriptionJobResponse> {
-    const uploadUrl = await this.s3Service.generatePresignedUrl(
-      S3_BUCKET_NAMES.TRANSCRIPTION_AUDIO,
-      createInput.fileName,
-      createInput.contentType,
-    );
-
     const transcriptionJob: TranscriptionJob = {
       id: uuidv4(),
       fileName: createInput.fileName,
       status: TranscriptionJobStatus.WAITING,
       createdAt: new Date(),
     };
+
+    const uploadUrl = await this.generateUploadPresignedUrl(
+      transcriptionJob.id,
+      createInput.contentType,
+    );
 
     this.transcriptions.push(transcriptionJob);
 
@@ -82,5 +83,23 @@ export class TranscriptionJobsService {
     await SystemUtils.sleep(15000);
 
     return `Hello world! ${new Date().toLocaleString('ru-RU')}`;
+  }
+
+  private async generateUploadPresignedUrl(
+    key: string,
+    contentType: string,
+    ttl: number = 900,
+  ): Promise<string> {
+    const command = new PutObjectCommand({
+      Bucket: S3_BUCKET_NAMES.TRANSCRIPTION_AUDIO,
+      Key: key,
+      ContentType: contentType,
+    });
+
+    const uploadUrl = await getSignedUrl(this.s3Service.getClient(), command, {
+      expiresIn: ttl,
+    });
+
+    return uploadUrl;
   }
 }
