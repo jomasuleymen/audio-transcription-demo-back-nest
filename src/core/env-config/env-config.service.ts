@@ -30,4 +30,8 @@ export class EnvConfigService {
   getS3SecretAccessKey(): string {
     return this.configService.get('S3_SECRET_ACCESS_KEY')!;
   }
+
+  getS3Region(): string {
+    return this.configService.get('S3_REGION')!;
+  }
 }

@@ -26,4 +26,10 @@ export class TranscriptionJob {
 
   @Field({ nullable: true })
   transcriptionText?: string;
+
+  @Field()
+  createdAt: Date;
+
+  @Field({ nullable: true })
+  completedAt?: Date;
 }

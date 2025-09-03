@@ -14,8 +14,6 @@ import { S3Module } from './s3/s3.module';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
-      playground: true,
-      introspection: true,
     }),
   ],
   providers: [],

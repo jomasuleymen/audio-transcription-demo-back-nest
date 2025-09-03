@@ -1,9 +1,9 @@
 import { CoreModule } from '@core/core.module';
 import { Module } from '@nestjs/common';
-import { TranscriptionModule } from './modules/transcription/transcription.module';
+import { TranscriptionJobsModule } from './modules/transcription-jobs/transcription-jobs.module';
 
 @Module({
-  imports: [CoreModule, TranscriptionModule],
+  imports: [CoreModule, TranscriptionJobsModule],
   controllers: [],
   providers: [],
 })

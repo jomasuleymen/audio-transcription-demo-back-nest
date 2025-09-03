@@ -35,6 +35,10 @@ export class EnvironmentVariables {
   @IsString()
   @IsNotEmpty()
   S3_SECRET_ACCESS_KEY: string;
+
+  @IsString()
+  @IsNotEmpty()
+  S3_REGION: string;
 }
 
 export function validate(config: Record<string, unknown>) {

@@ -1,8 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { TranscriptionJob } from '../entities/transcription.entity';
+import { TranscriptionJob } from '../entities/transcription-job.entity';
 
 @ObjectType()
-export class CreateTranscriptionJobResponseDto {
+export class CreateTranscriptionJobResponse {
   @Field(() => TranscriptionJob)
   job: TranscriptionJob;
 

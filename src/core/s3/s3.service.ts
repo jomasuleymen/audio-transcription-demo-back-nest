@@ -6,7 +6,6 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
 import { EnvConfigService } from '../env-config/env-config.service';
 import { S3_BUCKET_NAMES } from './s3.constants';
 import { S3BucketName } from './s3.type';
@@ -28,6 +27,7 @@ export class S3Service implements OnModuleInit {
         accessKeyId: this.envConfig.getS3AccessKeyId(),
         secretAccessKey: this.envConfig.getS3SecretAccessKey(),
       },
+      region: this.envConfig.getS3Region(),
       forcePathStyle: true,
     });
   }
@@ -40,11 +40,10 @@ export class S3Service implements OnModuleInit {
 
   async generatePresignedUrl(
     bucketName: S3BucketName,
+    key: string,
     contentType: string,
     ttl: number = 900,
-  ): Promise<PresignedUrlResponse> {
-    const key = uuidv4();
-
+  ): Promise<string> {
     const command = new PutObjectCommand({
       Bucket: bucketName,
       Key: key,
@@ -55,7 +54,7 @@ export class S3Service implements OnModuleInit {
       expiresIn: ttl,
     });
 
-    return { uploadUrl, key };
+    return uploadUrl;
   }
 
   getObjectUrl(bucketName: S3BucketName, key: string): string {
