@@ -13,7 +13,7 @@ import {
 } from './dao/transcription-jobs.dao.interface';
 import { CreateTranscriptionJobResponse } from './dto/create-transcription-job-response';
 import { CreateTranscriptionJobInput } from './dto/create-transcription-job.input';
-import { TranscriptionJob, TranscriptionJobStatus } from './entities/transcription-job.entity';
+import { TranscriptionJob, TranscriptionJobStatus } from './schemas/transcription-job.schema';
 
 @Injectable()
 export class TranscriptionJobsService {

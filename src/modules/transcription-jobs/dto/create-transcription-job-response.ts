@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { TranscriptionJob } from '../entities/transcription-job.entity';
+import { TranscriptionJob } from '../schemas/transcription-job.schema';
 
 @ObjectType()
 export class CreateTranscriptionJobResponse {

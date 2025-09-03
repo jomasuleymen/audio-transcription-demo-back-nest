@@ -1,5 +1,5 @@
 import { BULL_QUEUE_JOB_NAME, BULL_QUEUE_NAME } from '@core/bull/bull.const';
-import { TranscriptionJobStatus } from '@modules/transcription-jobs/entities/transcription-job.entity';
+import { TranscriptionJobStatus } from '@modules/transcription-jobs/schemas/transcription-job.schema';
 import { TranscriptionJobsService } from '@modules/transcription-jobs/transcription-jobs.service';
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';

@@ -1,6 +1,6 @@
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateTranscriptionJobInput } from './dto/create-transcription-job.input';
-import { TranscriptionJob } from './entities/transcription-job.entity';
+import { TranscriptionJob } from './schemas/transcription-job.schema';
 import { TranscriptionJobsService } from './transcription-jobs.service';
 import { CreateTranscriptionJobResponse } from './dto/create-transcription-job-response';
 

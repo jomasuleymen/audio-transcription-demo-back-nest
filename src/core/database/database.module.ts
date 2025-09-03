@@ -6,7 +6,7 @@ import { EnvConfigService } from '@core/env-config/env-config.service';
   imports: [
     MongooseModule.forRootAsync({
       useFactory: (envConfigService: EnvConfigService) => {
-        const uri = `mongodb://${envConfigService.getMongoHost()}:${envConfigService.getMongoPort()}}`;
+        const uri = `mongodb://${envConfigService.getMongoHost()}:${envConfigService.getMongoPort()}`;
 
         return {
           uri,
