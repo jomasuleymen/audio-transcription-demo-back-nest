@@ -1,13 +1,15 @@
 import {
-	CreateBucketCommand,
-	HeadBucketCommand,
-	PutObjectCommand,
-	S3Client,
+  CreateBucketCommand,
+  HeadBucketCommand,
+  PutObjectCommand,
+  S3Client,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { EnvConfigService } from '../env-config/env-config.service';
+import { S3_BUCKET_NAMES } from './s3.constants';
+import { S3BucketName } from './s3.type';
 
 export interface PresignedUrlResponse {
   uploadUrl: string;
@@ -15,7 +17,7 @@ export interface PresignedUrlResponse {
 }
 
 @Injectable()
-export class S3Service {
+export class S3Service implements OnModuleInit {
   private readonly logger = new Logger(S3Service.name);
   private s3Client: S3Client;
 
@@ -30,8 +32,14 @@ export class S3Service {
     });
   }
 
+  onModuleInit() {
+    Object.values(S3_BUCKET_NAMES).forEach((bucketName: S3BucketName) => {
+      this.ensureBucketExists(bucketName);
+    });
+  }
+
   async generatePresignedUrl(
-    bucketName: string,
+    bucketName: S3BucketName,
     contentType: string,
     ttl: number = 900,
   ): Promise<PresignedUrlResponse> {
@@ -50,11 +58,11 @@ export class S3Service {
     return { uploadUrl, key };
   }
 
-  getObjectUrl(bucketName: string, key: string): string {
+  getObjectUrl(bucketName: S3BucketName, key: string): string {
     return `${this.envConfig.getS3Endpoint()}/${bucketName}/${key}`;
   }
 
-  async ensureBucketExists(bucketName: string): Promise<void> {
+  async ensureBucketExists(bucketName: S3BucketName): Promise<void> {
     try {
       await this.s3Client.send(new HeadBucketCommand({ Bucket: bucketName }));
       this.logger.log(`Bucket ${bucketName} already exists`);
@@ -67,5 +75,9 @@ export class S3Service {
         throw createError;
       }
     }
+  }
+
+  getClient(): S3Client {
+    return this.s3Client;
   }
 }
