@@ -4,6 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { EnvConfigModule } from './env-config/env-config.module';
 import { S3Module } from './s3/s3.module';
+import { BullModule } from './bull/bull.module';
 
 @Global()
 @Module({
@@ -15,8 +16,9 @@ import { S3Module } from './s3/s3.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
     }),
+    BullModule,
   ],
   providers: [],
-  exports: [EnvConfigModule, S3Module],
+  exports: [EnvConfigModule, S3Module, BullModule],
 })
 export class CoreModule {}

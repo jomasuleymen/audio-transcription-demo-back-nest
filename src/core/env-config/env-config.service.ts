@@ -34,4 +34,16 @@ export class EnvConfigService {
   getS3Region(): string {
     return this.configService.get('S3_REGION')!;
   }
+
+  getRedisHost(): string {
+    return this.configService.get('REDIS_HOST')!;
+  }
+
+  getRedisPort(): number {
+    return this.configService.get('REDIS_PORT', 6379);
+  }
+
+  getRedisPassword(): string {
+    return this.configService.get('REDIS_PASSWORD')!;
+  }
 }
