@@ -51,6 +51,26 @@ export class EnvironmentVariables {
   @IsString()
   @IsNotEmpty()
   REDIS_PASSWORD: string;
+
+  @IsString()
+  @IsNotEmpty()
+  MONGO_HOST: string;
+
+  @Type(() => Number)
+  @IsNumber()
+  MONGO_PORT: number;
+
+  @IsString()
+  @IsNotEmpty()
+  MONGO_USERNAME: string;
+
+  @IsString()
+  @IsNotEmpty()
+  MONGO_PASSWORD: string;
+
+  @IsString()
+  @IsNotEmpty()
+  MONGO_DATABASE: string;
 }
 
 export function validate(config: Record<string, unknown>) {

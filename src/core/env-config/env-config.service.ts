@@ -46,4 +46,24 @@ export class EnvConfigService {
   getRedisPassword(): string {
     return this.configService.get('REDIS_PASSWORD')!;
   }
+
+  getMongoHost(): string {
+    return this.configService.get('MONGO_HOST')!;
+  }
+
+  getMongoPort(): number {
+    return this.configService.get('MONGO_PORT', 27017);
+  }
+  
+  getMongoUsername(): string {
+    return this.configService.get('MONGO_USERNAME')!;
+  }
+
+  getMongoPassword(): string {
+    return this.configService.get('MONGO_PASSWORD')!;
+  }
+  
+  getMongoDatabase(): string {
+    return this.configService.get('MONGO_DATABASE')!;
+  }
 }
